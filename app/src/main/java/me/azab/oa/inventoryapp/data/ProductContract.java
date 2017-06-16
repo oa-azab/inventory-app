@@ -21,7 +21,7 @@ public final class ProductContract {
     public static final class ProductEntry implements BaseColumns{
 
         // Table name
-        public static final String TABLE_NAME = "inventory";
+        public static final String TABLE_NAME = "products";
 
         // Column names
         public static final String _ID = BaseColumns._ID;
