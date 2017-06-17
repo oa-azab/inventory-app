@@ -3,7 +3,6 @@ package me.azab.oa.inventoryapp.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
@@ -37,7 +36,6 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create table
         db.execSQL(CREATE_PRODUCTS_TABLE);
-        Log.d(LOG_TAG,"Db initailzed");
     }
 
     @Override
