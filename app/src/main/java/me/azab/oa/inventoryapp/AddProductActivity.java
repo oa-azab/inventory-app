@@ -1,16 +1,15 @@
 package me.azab.oa.inventoryapp;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
-import me.azab.oa.inventoryapp.data.ProductDbHelper;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -66,10 +65,8 @@ public class AddProductActivity extends AppCompatActivity {
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER,supplierNumber);
 
         // Add values to db
-        ProductDbHelper dbHelper = new ProductDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long result = db.insert(ProductEntry.TABLE_NAME,null,values);
+        Uri uriResult = getContentResolver().insert(ProductEntry.CONTENT_URI,values);
 
-        Toast.makeText(this, "result "+result, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "result = "+uriResult, Toast.LENGTH_SHORT).show();
     }
 }

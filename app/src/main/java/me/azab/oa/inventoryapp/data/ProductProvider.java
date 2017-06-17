@@ -82,7 +82,42 @@ public class ProductProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return insertProduct(uri, values);
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
+    }
+
+    private Uri insertProduct(Uri uri, ContentValues values) {
+
+        // Data Validation
+        String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Product require name");
+        }
+
+        Float price = values.getAsFloat(ProductEntry.COLUMN_PRODUCT_PRICE);
+        if (price == null || price < 0) {
+            throw new IllegalArgumentException("Product price can't be less than zero");
+        }
+
+        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        if (quantity == null || quantity < 0) {
+            throw new IllegalArgumentException("Product quantity can't be less than zero");
+        }
+
+        // Get SQLite db instance
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Insert new row to Products table and get the id of the new row inserted
+        long id = db.insert(ProductEntry.TABLE_NAME, null, values);
+
+        // Once we know the ID of the new row in the table,
+        // return the new URI with the ID appended to the end of it
+        return ContentUris.withAppendedId(uri, id);
     }
 
     @Override
