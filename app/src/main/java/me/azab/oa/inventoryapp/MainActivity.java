@@ -2,7 +2,6 @@ package me.azab.oa.inventoryapp;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
-import me.azab.oa.inventoryapp.data.ProductDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,12 +22,9 @@ public class MainActivity extends AppCompatActivity {
         // Find UI
         fab = (FloatingActionButton) findViewById(R.id.fab_goto_add_product);
 
-        ProductDbHelper dbHelper = new ProductDbHelper(this);
-
         TextView mTextView = (TextView) findViewById(R.id.textview_test);
 
-        SQLiteDatabase dbR = dbHelper.getReadableDatabase();
-        Cursor cursor = dbR.query(ProductEntry.TABLE_NAME,null,null,null,null,null,null);
+        Cursor cursor = getContentResolver().query(ProductEntry.CONTENT_URI,null,null,null,null);
         while (cursor.moveToNext()){
             StringBuilder row = new StringBuilder();
             row.append(cursor.getString(0) + " - ");
