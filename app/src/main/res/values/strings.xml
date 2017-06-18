@@ -1,3 +1,7 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Inventory App</string>
+
+    <!-- Add Product Activity Title -->
+    <string name="add_product_activity_title">Add Product</string>
 </resources>
