@@ -1,7 +1,10 @@
 package me.azab.oa.inventoryapp;
 
+import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,11 +16,12 @@ import android.widget.ListView;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private FloatingActionButton fab;
     private ListView productsListView;
     private ProductCursorAdapter productCursorAdapter;
+    private static final int PRODUCTS_LOADER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,13 @@ public class MainActivity extends AppCompatActivity {
         View emptyView = findViewById(R.id.empty_view);
         productsListView.setEmptyView(emptyView);
 
-        Cursor cursor = getContentResolver().query(ProductEntry.CONTENT_URI, null, null, null, null);
+        //Cursor cursor = getContentResolver().query(ProductEntry.CONTENT_URI, null, null, null, null);
+
+        // Initialize CursorLoader
+        getLoaderManager().initLoader(PRODUCTS_LOADER_ID, null, this);
 
         // adapter initialization
-        productCursorAdapter = new ProductCursorAdapter(this, cursor);
+        productCursorAdapter = new ProductCursorAdapter(this, null);
         productsListView.setAdapter(productCursorAdapter);
 
         // Handle on item click
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
 
-                Uri contentUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI,id);
+                Uri contentUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
                 intent.setData(contentUri);
 
@@ -61,5 +68,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this
+                , ProductEntry.CONTENT_URI
+                , null , null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        productCursorAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        productCursorAdapter.swapCursor(null);
     }
 }

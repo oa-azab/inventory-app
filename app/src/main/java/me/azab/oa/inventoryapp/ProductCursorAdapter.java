@@ -24,12 +24,10 @@ import static me.azab.oa.inventoryapp.R.id.quantity;
 public class ProductCursorAdapter extends CursorAdapter {
 
     private Context mContext;
-    private Cursor mCursor;
 
     public ProductCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         mContext = context;
-        mCursor = cursor;
     }
 
     @Override
@@ -67,7 +65,8 @@ public class ProductCursorAdapter extends CursorAdapter {
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean result = decreaseQuantity(id);
+
+                boolean result = decreaseQuantity(getCursor(),id);
                 if(!result){
                     Toast.makeText(mContext, "Decrease quantity faild", Toast.LENGTH_SHORT).show();
                 }
@@ -81,16 +80,16 @@ public class ProductCursorAdapter extends CursorAdapter {
      * @param uriId the id of record to be quantity decreased
      * @return true for success and false for failure
      */
-    private boolean decreaseQuantity(int uriId) {
+    private boolean decreaseQuantity(Cursor cursor, int uriId) {
         // Move cursor to the desired row
-        mCursor.moveToPosition(uriId - 1);
+        cursor.moveToPosition(uriId - 1);
 
         // Get row data
-        String name = mCursor.getString(mCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
-        float price = mCursor.getFloat(mCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
-        int quantity = mCursor.getInt(mCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
-        String supplierName = mCursor.getString(mCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
-        String supplierNumber = mCursor.getString(mCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER));
+        String name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
+        float price = cursor.getFloat(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
+        int quantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+        String supplierName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
+        String supplierNumber = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER));
 
         // Check if quantity greater than 1 decrease otherwise return false
         if (quantity < 1) {
