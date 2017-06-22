@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
@@ -65,11 +64,7 @@ public class ProductCursorAdapter extends CursorAdapter {
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                boolean result = decreaseQuantity(getCursor(),id);
-                if(!result){
-                    Toast.makeText(mContext, "Decrease quantity faild", Toast.LENGTH_SHORT).show();
-                }
+                decreaseQuantity(getCursor(), id);
             }
         });
     }

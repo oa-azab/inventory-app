@@ -59,9 +59,9 @@ public class DetailActivity extends AppCompatActivity {
         deleteProductBtn = (Button) findViewById(R.id.delete_record);
 
         // Set UI data
-        productPriceTextView.setText("Price: " + price);
+        productPriceTextView.setText(getString(R.string.label_price) + price);
         productQuantityTextView.setText(String.valueOf(quantity));
-        productSupplierNameTextView.setText("Supplier Name: " +supplierName);
+        productSupplierNameTextView.setText(getString(R.string.label_supplier_name) +supplierName);
 
         // Hock button with listeners
         quantityDecreaseBtn.setOnClickListener(new View.OnClickListener() {
@@ -120,14 +120,14 @@ public class DetailActivity extends AppCompatActivity {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the postivie and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to delete this product?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_dialog_message);
+        builder.setPositiveButton(R.string.delete_dialog_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the product.
                 deleteProduct();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.delete_dialog_negative, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
                 // and continue editing the pet.
@@ -148,7 +148,7 @@ public class DetailActivity extends AppCompatActivity {
     private void deleteProduct(){
         int result = getContentResolver().delete(contentUri,null,null);
         if( result > 0){
-            Toast.makeText(this, "Product Deleted.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_message_deleted, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
