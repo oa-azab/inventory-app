@@ -1,5 +1,6 @@
 package me.azab.oa.inventoryapp;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,10 +17,12 @@ public class DetailActivity extends AppCompatActivity {
     Uri contentUri;
     TextView productPriceTextView;
     TextView productQuantityTextView;
+    TextView productSupplierNameTextView;
     Button quantityIncreaseBtn;
     Button quantityDecreaseBtn;
     Button callSupplierBtn;
     Button deleteProductBtn;
+    Cursor productCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class DetailActivity extends AppCompatActivity {
         contentUri = getIntent().getData();
 
         // Get item cursor
-        Cursor productCursor = getContentResolver().query(contentUri, null, null, null, null);
+        productCursor = getContentResolver().query(contentUri, null, null, null, null);
         productCursor.moveToFirst();
 
         // Get product details
@@ -46,27 +49,37 @@ public class DetailActivity extends AppCompatActivity {
         // Get UI
         productPriceTextView = (TextView) findViewById(R.id.txt_product_price);
         productQuantityTextView = (TextView) findViewById(R.id.txt_product_quantity);
+        productSupplierNameTextView = (TextView) findViewById(R.id.txt_product_supplier_name);
         quantityIncreaseBtn = (Button) findViewById(R.id.increase_quantity);
         quantityDecreaseBtn = (Button) findViewById(R.id.decrease_quantity);
         callSupplierBtn = (Button) findViewById(R.id.call_supplier);
         deleteProductBtn = (Button) findViewById(R.id.delete_record);
 
         // Set UI data
-        productPriceTextView.setText("Price: "+price);
+        productPriceTextView.setText("Price: " + price);
         productQuantityTextView.setText(String.valueOf(quantity));
+        productSupplierNameTextView.setText("Supplier Name: " +supplierName);
 
         // Hock button with listeners
         quantityDecreaseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ProductUtils.changeQuantity(DetailActivity.this
+                        , productCursor
+                        , ContentUris.parseId(contentUri)
+                        , false);
+                updateUi();
             }
         });
 
         quantityIncreaseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ProductUtils.changeQuantity(DetailActivity.this
+                        , productCursor
+                        , ContentUris.parseId(contentUri)
+                        , true);
+                updateUi();
             }
         });
 
@@ -74,7 +87,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+supplierNumber));
+                intent.setData(Uri.parse("tel:" + supplierNumber));
                 startActivity(intent);
             }
         });
@@ -85,5 +98,15 @@ public class DetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * Update cursor and the ui of the quantity
+     */
+    private void updateUi(){
+        productCursor = getContentResolver().query(contentUri, null, null, null, null);
+        productCursor.moveToFirst();
+        int quantity = productCursor.getInt(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+        productQuantityTextView.setText(String.valueOf(quantity));
     }
 }

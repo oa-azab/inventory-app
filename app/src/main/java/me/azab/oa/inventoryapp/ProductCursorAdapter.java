@@ -105,7 +105,6 @@ public class ProductCursorAdapter extends CursorAdapter {
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER, supplierNumber);
 
         int result = mContext.getContentResolver().update(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, uriId), values, null, null);
-        Toast.makeText(mContext, "" + result, Toast.LENGTH_SHORT).show();
         if (result > 0) {
             return true;
 
