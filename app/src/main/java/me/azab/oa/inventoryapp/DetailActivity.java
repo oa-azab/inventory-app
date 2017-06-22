@@ -1,14 +1,17 @@
 package me.azab.oa.inventoryapp;
 
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
@@ -95,7 +98,7 @@ public class DetailActivity extends AppCompatActivity {
         deleteProductBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showDeleteConfirmationDialog();
             }
         });
     }
@@ -108,5 +111,45 @@ public class DetailActivity extends AppCompatActivity {
         productCursor.moveToFirst();
         int quantity = productCursor.getInt(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
         productQuantityTextView.setText(String.valueOf(quantity));
+    }
+
+    /**
+     * Show alert dialog to confirm deleting the product
+     */
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete this product?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the product.
+                deleteProduct();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Delete product from database
+     */
+    private void deleteProduct(){
+        int result = getContentResolver().delete(contentUri,null,null);
+        if( result > 0){
+            Toast.makeText(this, "Product Deleted.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }
