@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
@@ -26,12 +25,14 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab_goto_add_product);
         productsListView = (ListView) findViewById(R.id.products_listview);
 
-        TextView mTextView = (TextView) findViewById(R.id.textview_test);
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        productsListView.setEmptyView(emptyView);
 
-        Cursor cursor = getContentResolver().query(ProductEntry.CONTENT_URI,null,null,null,null);
+        Cursor cursor = getContentResolver().query(ProductEntry.CONTENT_URI, null, null, null, null);
 
         // adapter initialization
-        productCursorAdapter = new ProductCursorAdapter(this,cursor);
+        productCursorAdapter = new ProductCursorAdapter(this, cursor);
 
         productsListView.setAdapter(productCursorAdapter);
 
