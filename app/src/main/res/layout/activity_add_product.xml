@@ -15,35 +15,35 @@
         <EditText
             android:id="@+id/edit_product_name"
             style="@style/EditorFieldStyle"
-            android:hint="Name"
+            android:hint="@string/add_product_edit_name"
             android:inputType="textCapWords" />
 
         <!-- Price field -->
         <EditText
             android:id="@+id/edit_product_price"
             style="@style/EditorFieldStyle"
-            android:hint="Price"
+            android:hint="@string/add_product_edit_price"
             android:inputType="numberDecimal" />
 
         <!-- Quantity field -->
         <EditText
             android:id="@+id/edit_product_quantity"
             style="@style/EditorFieldStyle"
-            android:hint="Quantity"
+            android:hint="@string/add_product_edit_quantity"
             android:inputType="number" />
 
         <!-- Supplier Name field -->
         <EditText
             android:id="@+id/edit_product_supplier_name"
             style="@style/EditorFieldStyle"
-            android:hint="Supplier Name"
+            android:hint="@string/add_product_edit_supplier_name"
             android:inputType="textCapWords" />
 
         <!-- Supplier Name field -->
         <EditText
             android:id="@+id/edit_product_supplier_number"
             style="@style/EditorFieldStyle"
-            android:hint="Supplier Number"
+            android:hint="@string/add_product_edit_supplier_number"
             android:inputType="number" />
 
     </LinearLayout>

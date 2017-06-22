@@ -70,6 +70,10 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown uri " + uri);
         }
+
+        // Set notification for cursor
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return cursor;
     }
 
@@ -123,6 +127,9 @@ public class ProductProvider extends ContentProvider {
         // Insert new row to Products table and get the id of the new row inserted
         long id = db.insert(ProductEntry.TABLE_NAME, null, values);
 
+        // Notify data set changed
+        getContext().getContentResolver().notifyChange(uri, null);
+
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
@@ -150,6 +157,12 @@ public class ProductProvider extends ContentProvider {
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
 
         // Return the number of rows deleted
@@ -199,6 +212,12 @@ public class ProductProvider extends ContentProvider {
 
         // Update Pets table
         int result = db.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (result != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
         return result;
     }
