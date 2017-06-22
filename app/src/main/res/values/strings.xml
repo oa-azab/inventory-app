@@ -1,3 +1,31 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Inventory App</string>
+
+    <!-- Add Product Activity Title -->
+    <string name="add_product_activity_title">Add Product</string>
+
+    <!-- Empty view text messages -->
+    <string name="empty_view_title_text">Your inventory is empty</string>
+    <string name="empty_view_subtitle_text">Click on + button and start adding products</string>
+
+    <!-- Detail Activity Labels -->
+    <string name="btn_label_call_supplier">Call Supplier</string>
+    <string name="btn_label_delete_product">Delete Product</string>
+    <string name="label_price">Price: </string>
+    <string name="label_supplier_name">Supplier Name: </string>
+
+    <!-- Delete dialog strings -->
+    <string name="delete_dialog_message">Are you sure you want to delete this product?</string>
+    <string name="delete_dialog_positive">Delete</string>
+    <string name="delete_dialog_negative">Cancel</string>
+    <string name="toast_message_deleted">Product Deleted.</string>
+
+    <!-- Add product EditText hints -->
+    <string name="add_product_edit_name">Name</string>
+    <string name="add_product_edit_price">Price</string>
+    <string name="add_product_edit_quantity">Quantity</string>
+    <string name="add_product_edit_supplier_name">Supplier Name</string>
+    <string name="add_product_edit_supplier_number">Supplier Number</string>
+
 </resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="me.azab.oa.inventoryapp.AddProductActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_product_name"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/add_product_edit_name"
+            android:inputType="textCapWords" />
+
+        <!-- Price field -->
+        <EditText
+            android:id="@+id/edit_product_price"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/add_product_edit_price"
+            android:inputType="numberDecimal" />
+
+        <!-- Quantity field -->
+        <EditText
+            android:id="@+id/edit_product_quantity"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/add_product_edit_quantity"
+            android:inputType="number" />
+
+        <!-- Supplier Name field -->
+        <EditText
+            android:id="@+id/edit_product_supplier_name"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/add_product_edit_supplier_name"
+            android:inputType="textCapWords" />
+
+        <!-- Supplier Name field -->
+        <EditText
+            android:id="@+id/edit_product_supplier_number"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/add_product_edit_supplier_number"
+            android:inputType="number" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_done" />
+
+</RelativeLayout>
