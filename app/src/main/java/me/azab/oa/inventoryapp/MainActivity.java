@@ -1,11 +1,14 @@
 package me.azab.oa.inventoryapp;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
@@ -33,19 +36,22 @@ public class MainActivity extends AppCompatActivity {
 
         // adapter initialization
         productCursorAdapter = new ProductCursorAdapter(this, cursor);
-
         productsListView.setAdapter(productCursorAdapter);
 
-//        while (cursor.moveToNext()){
-//            StringBuilder row = new StringBuilder();
-//            row.append(cursor.getString(0) + " - ");
-//            row.append(cursor.getString(1) + " - ");
-//            row.append(cursor.getString(2) + " - ");
-//            row.append(cursor.getString(3) + " - ");
-//            row.append(cursor.getString(4) + " - ");
-//            row.append(cursor.getString(5) + " - ");
-//            mTextView.append("\n"+row);
-//        }
+        // Handle on item click
+        productsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+
+                Uri contentUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI,id);
+
+                intent.setData(contentUri);
+
+                startActivity(intent);
+            }
+        });
+
 
         // Handle click navigate user to AddProductActivity
         fab.setOnClickListener(new View.OnClickListener() {

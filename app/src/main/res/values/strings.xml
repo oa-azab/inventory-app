@@ -8,5 +8,9 @@
     <!-- Empty view text messages -->
     <string name="empty_view_title_text">Your inventory is empty</string>
     <string name="empty_view_subtitle_text">Click on + button and start adding products</string>
-    
+
+    <!-- Detail Activity Labels -->
+    <string name="btn_label_call_supplier">Call Supplier</string>
+    <string name="btn_label_delete_product">Delete Product</string>
+
 </resources>
