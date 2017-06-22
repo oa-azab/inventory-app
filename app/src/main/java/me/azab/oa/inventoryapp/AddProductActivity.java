@@ -38,7 +38,6 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addProduct();
-                finish();
             }
         });
     }
@@ -51,10 +50,21 @@ public class AddProductActivity extends AppCompatActivity {
 
         // Extract data from EditTexts
         String name = nameEditText.getText().toString().trim();
-        float price = Float.parseFloat(priceEditText.getText().toString().trim());
-        int quantity = Integer.parseInt(quantityEditText.getText().toString().trim());
+        String priceStr = priceEditText.getText().toString().trim();
+        String quantityStr = quantityEditText.getText().toString().trim();
         String supplierName = supplierNameEditText.getText().toString().trim();
         String supplierNumber = supplierNumberEditText.getText().toString().trim();
+
+        // Validate data
+        if(name.isEmpty() || supplierName.isEmpty() || supplierNumber.isEmpty() ||
+                priceStr.isEmpty() || quantityStr.isEmpty()){
+            Toast.makeText(this, "Provide correct data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Cast data to float and int
+        float price = Float.valueOf(priceStr);
+        int quantity = Integer.valueOf(quantityStr);
 
         // Add data to corresponding db columns
         ContentValues values = new ContentValues();
@@ -68,5 +78,7 @@ public class AddProductActivity extends AppCompatActivity {
         Uri uriResult = getContentResolver().insert(ProductEntry.CONTENT_URI,values);
 
         Toast.makeText(this, "result = "+uriResult, Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 }
