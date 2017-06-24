@@ -35,7 +35,7 @@ public class ProductCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, final Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {
         // Get UI views
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
         TextView priceTextView = (TextView) view.findViewById(price);
@@ -64,7 +64,8 @@ public class ProductCursorAdapter extends CursorAdapter {
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                decreaseQuantity(getCursor(), id);
+                Cursor cursor = mContext.getContentResolver().query(ContentUris.withAppendedId(ProductEntry.CONTENT_URI,id),null,null,null,null);
+                ProductUtils.changeQuantity(mContext,cursor,id,false);
             }
         });
     }
