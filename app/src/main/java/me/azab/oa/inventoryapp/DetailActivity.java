@@ -4,28 +4,35 @@ import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import me.azab.oa.inventoryapp.data.ProductContract.ProductEntry;
 
 public class DetailActivity extends AppCompatActivity {
 
-    Uri contentUri;
-    TextView productPriceTextView;
-    TextView productQuantityTextView;
-    TextView productSupplierNameTextView;
-    Button quantityIncreaseBtn;
-    Button quantityDecreaseBtn;
-    Button callSupplierBtn;
-    Button deleteProductBtn;
-    Cursor productCursor;
+    private Uri contentUri;
+    private TextView productPriceTextView;
+    private TextView productQuantityTextView;
+    private TextView productSupplierNameTextView;
+    private Button quantityIncreaseBtn;
+    private Button quantityDecreaseBtn;
+    private Button callSupplierBtn;
+    private Button deleteProductBtn;
+    private Cursor productCursor;
+    private ImageView productPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
 
         // Get product details
         String name = productCursor.getString(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
+        String picture = productCursor.getString(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PICTURE));
         float price = productCursor.getFloat(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE));
         int quantity = productCursor.getInt(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
         String supplierName = productCursor.getString(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
@@ -57,11 +65,23 @@ public class DetailActivity extends AppCompatActivity {
         quantityDecreaseBtn = (Button) findViewById(R.id.decrease_quantity);
         callSupplierBtn = (Button) findViewById(R.id.call_supplier);
         deleteProductBtn = (Button) findViewById(R.id.delete_record);
+        productPicture = (ImageView) findViewById(R.id.img_product_picture);
 
         // Set UI data
         productPriceTextView.setText(getString(R.string.label_price) + price);
         productQuantityTextView.setText(String.valueOf(quantity));
-        productSupplierNameTextView.setText(getString(R.string.label_supplier_name) +supplierName);
+        productSupplierNameTextView.setText(getString(R.string.label_supplier_name) + supplierName);
+
+        if (picture != null) {
+            try {
+                Uri productPictureUri = Uri.parse(picture);
+                Log.d("TAG", "here:" + productPictureUri);
+                Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), productPictureUri);
+                productPicture.setImageBitmap(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Hock button with listeners
         quantityDecreaseBtn.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +126,7 @@ public class DetailActivity extends AppCompatActivity {
     /**
      * Update cursor and the ui of the quantity
      */
-    private void updateUi(){
+    private void updateUi() {
         productCursor = getContentResolver().query(contentUri, null, null, null, null);
         productCursor.moveToFirst();
         int quantity = productCursor.getInt(productCursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
@@ -145,9 +165,9 @@ public class DetailActivity extends AppCompatActivity {
     /**
      * Delete product from database
      */
-    private void deleteProduct(){
-        int result = getContentResolver().delete(contentUri,null,null);
-        if( result > 0){
+    private void deleteProduct() {
+        int result = getContentResolver().delete(contentUri, null, null);
+        if (result > 0) {
             Toast.makeText(this, R.string.toast_message_deleted, Toast.LENGTH_SHORT).show();
             finish();
         }
