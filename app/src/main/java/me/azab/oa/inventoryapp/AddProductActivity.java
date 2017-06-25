@@ -56,7 +56,7 @@ public class AddProductActivity extends AppCompatActivity {
                 pickIntent.setType("image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                 startActivityForResult(chooserIntent, 101);
             }
@@ -74,13 +74,20 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 101){
-            if(resultCode == RESULT_OK){
+        if (requestCode == 101) {
+            if (resultCode == RESULT_OK) {
                 Uri contentUri = data.getData();
-                pictureUri = String.valueOf(contentUri);
-                Toast.makeText(this, ""+contentUri, Toast.LENGTH_SHORT).show();
+                if (isGoogleNewPhotosUri(contentUri)) {
+                    String path = contentUri.getPath();
+                    int start = path.indexOf("content://");
+                    int end = path.indexOf("/ORIGINAL");
+                    String subStr = path.substring(start, end);
+                    pictureUri = subStr;
+                } else {
+                    pictureUri = String.valueOf(contentUri);
+                }
                 try {
-                    Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(),contentUri);
+                    Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), contentUri);
                     picturePreview.setImageBitmap(image);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,11 +97,14 @@ public class AddProductActivity extends AppCompatActivity {
         }
     }
 
+    public static boolean isGoogleNewPhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.contentprovider".equals(uri.getAuthority());
+    }
+
     /**
-     *  Method Extract data form EditTexts and add new prodcut to database
-     *
+     * Method Extract data form EditTexts and add new prodcut to database
      */
-    private void addProduct(){
+    private void addProduct() {
 
         // Extract data from EditTexts
         String name = nameEditText.getText().toString().trim();
@@ -104,8 +114,8 @@ public class AddProductActivity extends AppCompatActivity {
         String supplierNumber = supplierNumberEditText.getText().toString().trim();
 
         // Validate data
-        if(name.isEmpty() || supplierName.isEmpty() || supplierNumber.isEmpty() ||
-                priceStr.isEmpty() || quantityStr.isEmpty()){
+        if (name.isEmpty() || supplierName.isEmpty() || supplierNumber.isEmpty() ||
+                priceStr.isEmpty() || quantityStr.isEmpty()) {
             Toast.makeText(this, "Provide correct data.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -116,19 +126,19 @@ public class AddProductActivity extends AppCompatActivity {
 
         // Add data to corresponding db columns
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME,name);
-        if(pictureUri != null){
-            values.put(ProductEntry.COLUMN_PRODUCT_PICTURE,pictureUri);
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, name);
+        if (pictureUri != null) {
+            values.put(ProductEntry.COLUMN_PRODUCT_PICTURE, pictureUri);
         }
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE,price);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY,quantity);
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,supplierName);
-        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER,supplierNumber);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, supplierName);
+        values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NUMBER, supplierNumber);
 
         // Add values to db
-        Uri uriResult = getContentResolver().insert(ProductEntry.CONTENT_URI,values);
+        Uri uriResult = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
-        Toast.makeText(this, "result = "+uriResult, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "result = " + uriResult, Toast.LENGTH_SHORT).show();
 
         finish();
     }
